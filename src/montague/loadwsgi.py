@@ -183,6 +183,11 @@ class Loader(object):
 
     def load_server(self, name=None):
         server_config = self.server_config(name)
+
+        # name with no colon => load server from a different named section
+        if ':' not in server_config.config['use']:
+            return self.load_server(server_config.config['use'])
+
         scheme, resource = server_config.config['use'].split(':', 1)
         if scheme in ('egg', 'package'):
             factory = self._load_entry_point_factory(

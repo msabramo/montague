@@ -1,4 +1,5 @@
 import os
+import pytest
 from montague.ini import IniConfigLoader
 from montague.loadwsgi import Loader
 from montague import load_app, load_server, load_filter
@@ -73,6 +74,21 @@ def test_load_server(fakeapp):
     assert actual.montague_conf['local_conf']['host'] == '127.0.0.1'
     resp = actual.get('/')
     assert b'This is basic app2' == resp.body
+
+
+def test_load_server_reference_another_section(fakeapp):
+    config_path = os.path.join(here, 'config_files/server_reference_another_section.ini')
+    server = load_server(config_path, name=DEFAULT)
+    actual = server(fakeapp.apps.basic_app)
+    assert actual.montague_conf['local_conf']['port'] == '42'
+    resp = actual.get('/')
+    assert b'This is basic app' == resp.body
+
+
+def test_load_server_reference_another_section(fakeapp):
+    config_path = os.path.join(here, 'config_files/server_reference_another_section.ini')
+    with pytest.raises(KeyError) as excinfo:
+        server = load_server(config_path, name='reference_non_existing_section')
 
 
 def test_load_filter(fakeapp):
