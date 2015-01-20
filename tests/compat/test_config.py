@@ -14,6 +14,13 @@ def test_config_egg(fakeapp):
     assert isinstance(app, fakeapp.configapps.SimpleApp)
 
 
+def test_config_egg_not_found(fakeapp):
+    expected = "Entry point 'unknown_app' not found in egg 'FakeApp'"
+    with pytest.raises(LookupError) as excinfo:
+        app = loadapp('egg:FakeApp#unknown_app')
+    assert expected in str(excinfo.value)
+
+
 def test_config1(fakeapp):
     app = loadapp(ini_file, relative_to=here, name='test1')
     assert app.local_conf == {
