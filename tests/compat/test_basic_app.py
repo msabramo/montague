@@ -19,6 +19,12 @@ def test_main(fakeapp):
     assert app is fakeapp.apps.basic_app
 
 
+def test_no_app_name(fakeapp):
+    app = loadapp('config:sample_configs/basic_app.ini#no_app_name',
+                  relative_to=here)
+    assert app is fakeapp.apps.basic_app
+
+
 def test_other(fakeapp):
     app = loadapp('config:sample_configs/basic_app.ini#other',
                   relative_to=here)

@@ -7,6 +7,7 @@ setup(
     entry_points={
       'paste.app_factory': """
       basic_app=fakeapp.apps:make_basic_app
+      main=fakeapp.apps:make_basic_app
       other=fakeapp.apps:make_basic_app2
       configed=fakeapp.configapps:SimpleApp.make_app
       """,
