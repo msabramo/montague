@@ -1,6 +1,8 @@
 import os
 import pytest
+from six import StringIO
 from montague.compat import loadapp, appconfig
+from montague.compat.loadwsgi import NicerConfigParser
 
 
 ini_file = 'config:sample_configs/test_config.ini'
@@ -173,3 +175,14 @@ def test_interpolate_exception():
     # _loadconfig 'de-windowsifies' the paths, so we must do the same.
     expected = expected.replace('\\', '/')
     assert expected in excinfo.value.message
+
+
+def test_interpolating_configparser():
+    class InterpolatingConfigParser(NicerConfigParser):
+        def _interpolation(self):
+            raise Exception("here I am in _interpolation")
+    cfg = StringIO("""\
+foo = bar
+    """)
+    cp = InterpolatingConfigParser('some_file.ini')
+    cp._interpolate(section='section', option='option', rawval='rawval', vars=())
