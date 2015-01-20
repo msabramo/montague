@@ -133,7 +133,7 @@ class IniConfigLoader(object):
             constructor = LoadableConfig.server
             local_config = self._config['server'][name]
         else:
-            raise KeyError
+            raise KeyError(name)
         return self._process_config(name, local_config, constructor)
 
     def filter_config(self, name):
